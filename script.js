@@ -40,7 +40,7 @@ function salvarDados() {
 
 function carregarDados() {
   const dadosSalvos = localStorage.getItem("simuladorRendaDados");
-  if (!dadosSalvos) return;
+  if (!dadosSalvos) return false;
 
   const dados = JSON.parse(dadosSalvos);
 
@@ -48,6 +48,8 @@ function carregarDados() {
     const campo = document.getElementById(id);
     if (campo) campo.value = dados[id];
   });
+
+  return true;
 }
 
 function carregarHistorico() {
@@ -362,9 +364,13 @@ function limparCampos() {
   if (botaoHistorico) botaoHistorico.disabled = true;
 }
 
-window.addEventListener("load", () => {
-  carregarDados();
-  carregarHistorico();
+document.addEventListener("DOMContentLoaded", () => {
+  const dadosCarregados = carregarDados();
+  if (dadosCarregados) {
+    calcular();
+  }
+
+  if (typeof carregarHistorico === "function") carregarHistorico();
 
   const botaoHistorico = document.getElementById("salvarHistorico");
   if (botaoHistorico) {
