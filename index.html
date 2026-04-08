@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciamento de Renda</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <section class="topo paper">
+      <div class="topo-icone">💸</div>
+      <h1>Gerenciamento de Renda</h1>
+      <p>Controle seus gastos, veja quanto sobra e entenda sua saúde financeira.</p>
+    </section>
+
+    <section class="card paper form-card">
+      <h2>Preencha seus dados</h2>
+
+      <div class="grid">
+        <div class="campo">
+          <label for="salario">Salário mensal</label>
+          <input type="number" id="salario" placeholder="Ex: 3000">
+        </div>
+
+        <div class="campo">
+          <label for="rendaExtra">Renda extra</label>
+          <input type="number" id="rendaExtra" placeholder="Ex: 500">
+        </div>
+
+        <div class="campo">
+          <label for="meta">Meta de economia</label>
+          <input type="number" id="meta" placeholder="Ex: 500">
+        </div>
+
+        <div class="campo">
+          <label for="moradia">Moradia / aluguel</label>
+          <input type="number" id="moradia" placeholder="Ex: 900">
+        </div>
+
+        <div class="campo">
+          <label for="contas">Contas fixas</label>
+          <input type="number" id="contas" placeholder="Ex: 250">
+        </div>
+
+        <div class="campo">
+          <label for="alimentacao">Alimentação</label>
+          <input type="number" id="alimentacao" placeholder="Ex: 600">
+        </div>
+
+        <div class="campo">
+          <label for="transporte">Transporte</label>
+          <input type="number" id="transporte" placeholder="Ex: 300">
+        </div>
+
+        <div class="campo">
+          <label for="lazer">Lazer</label>
+          <input type="number" id="lazer" placeholder="Ex: 200">
+        </div>
+
+        <div class="campo">
+          <label for="outros">Outros gastos</label>
+          <input type="number" id="outros" placeholder="Ex: 150">
+        </div>
+      </div>
+
+      <div class="botoes">
+        <button class="btn principal" onclick="calcular()">Calcular</button>
+        <button class="btn secundario" onclick="limparCampos()">Limpar</button>
+      </div>
+    </section>
+
+    <section class="card paper resultado-card" id="resultado">
+      <h2>Seu resultado</h2>
+      <p class="placeholder">Preencha os campos e toque em calcular.</p>
+    </section>
+
+    <section class="card paper">
+      <h2>Distribuição dos gastos</h2>
+      <div class="grafico-area">
+        <canvas id="graficoGastos"></canvas>
+      </div>
+    </section>
+
+    <section class="card paper">
+      <h2>Dicas automáticas</h2>
+      <div id="dicas" class="dicas-box">
+        <p class="placeholder">Calcule seus dados para receber sugestões automáticas.</p>
+      </div>
+    </section>
+
+    <section class="card paper">
+      <h2>Usar no celular</h2>
+      <div class="app-box">
+        <p>Esse projeto já funciona no navegador do celular.</p>
+        <p>No Android, você pode abrir no Chrome e usar <strong>Adicionar à tela inicial</strong>.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
