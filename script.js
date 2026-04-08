@@ -11,6 +11,10 @@ function formatar(valor) {
   });
 }
 
+function formatarPercentual(valor) {
+  return valor.toFixed(1) + "%";
+}
+
 function salvarDados() {
   const ids = [
     "salario",
@@ -45,15 +49,25 @@ function carregarDados() {
   });
 }
 
-function gerarDicas(rendaTotal, gastosTotais, sobraMensal, porcentagemGastos, lazer, outros) {
+function gerarDicas(rendaTotal, gastosTotais, sobraMensal, porcentagemGastos, categorias) {
   const dicas = [];
 
   if (porcentagemGastos > 85) dicas.push("Seus gastos estão muito altos em relação à sua renda. Tente cortar excessos primeiro.");
-  if (lazer > rendaTotal * 0.15) dicas.push("Seu gasto com lazer está alto. Reduzir um pouco já pode aliviar bastante o mês.");
-  if (outros > rendaTotal * 0.1) dicas.push("A categoria 'outros' está pesada. Vale revisar o que está entrando nela.");
   if (sobraMensal > 0 && sobraMensal < rendaTotal * 0.1) dicas.push("Você ainda sobra no positivo, mas pouco. Tente aumentar sua folga mensal.");
   if (sobraMensal >= rendaTotal * 0.2) dicas.push("Boa. Sua sobra mensal está saudável. Você pode montar reserva e pensar em investir.");
   if (gastosTotais === 0) dicas.push("Você ainda não preencheu os gastos. Coloque valores reais para uma análise melhor.");
+
+  categorias.forEach((categoria) => {
+    if (categoria.percentual > 35) {
+      dicas.push(`A categoria ${categoria.nome} está consumindo ${formatarPercentual(categoria.percentual)} da sua renda. Avalie reduzir esse valor.`);
+    } else if (categoria.id === "lazer" && categoria.percentual > 15) {
+      dicas.push("Seu gasto com lazer está alto. Reduzir um pouco já pode aliviar bastante o mês.");
+    } else if (categoria.id === "alimentacao" && categoria.percentual > 18) {
+      dicas.push("Alimentação está acima do recomendado. Procure ajustar refeições mais econômicas.");
+    } else if (categoria.id === "outros" && categoria.percentual > 12) {
+      dicas.push("A categoria 'outros' está pesada. Vale revisar o que está entrando nela.");
+    }
+  });
 
   const dicasBox = document.getElementById("dicas");
 
@@ -128,6 +142,15 @@ function calcular() {
     const sobraMensal = rendaTotal - gastosTotais;
     const sobraAnual = sobraMensal * 12;
     const porcentagemGastos = (gastosTotais / rendaTotal) * 100;
+
+    const categorias = [
+      { id: "moradia", nome: "Moradia / aluguel", valor: moradia, percentual: rendaTotal > 0 ? (moradia / rendaTotal) * 100 : 0 },
+      { id: "contas", nome: "Contas fixas", valor: contas, percentual: rendaTotal > 0 ? (contas / rendaTotal) * 100 : 0 },
+      { id: "alimentacao", nome: "Alimentação", valor: alimentacao, percentual: rendaTotal > 0 ? (alimentacao / rendaTotal) * 100 : 0 },
+      { id: "transporte", nome: "Transporte", valor: transporte, percentual: rendaTotal > 0 ? (transporte / rendaTotal) * 100 : 0 },
+      { id: "lazer", nome: "Lazer", valor: lazer, percentual: rendaTotal > 0 ? (lazer / rendaTotal) * 100 : 0 },
+      { id: "outros", nome: "Outros gastos", valor: outros, percentual: rendaTotal > 0 ? (outros / rendaTotal) * 100 : 0 }
+    ];
 
     let statusTexto = "";
     let statusClasse = "";
@@ -229,17 +252,20 @@ function calcular() {
       </div>
 
       <div class="lista-categorias">
-        <div class="item-categoria"><span>Moradia / aluguel</span><strong>${formatar(moradia)}</strong></div>
-        <div class="item-categoria"><span>Contas fixas</span><strong>${formatar(contas)}</strong></div>
-        <div class="item-categoria"><span>Alimentação</span><strong>${formatar(alimentacao)}</strong></div>
-        <div class="item-categoria"><span>Transporte</span><strong>${formatar(transporte)}</strong></div>
-        <div class="item-categoria"><span>Lazer</span><strong>${formatar(lazer)}</strong></div>
-        <div class="item-categoria"><span>Outros gastos</span><strong>${formatar(outros)}</strong></div>
+        ${categorias.map(categoria => `
+          <div class="item-categoria">
+            <div>
+              <span>${categoria.nome}</span>
+              <small>${formatarPercentual(categoria.percentual)} da renda</small>
+            </div>
+            <strong>${formatar(categoria.valor)}</strong>
+          </div>
+        `).join("")}
       </div>
     `;
 
     desenharGrafico(moradia, contas, alimentacao, transporte, lazer, outros);
-    gerarDicas(rendaTotal, gastosTotais, sobraMensal, porcentagemGastos, lazer, outros);
+    gerarDicas(rendaTotal, gastosTotais, sobraMensal, porcentagemGastos, categorias);
     salvarDados();
 
     // Resetar botão
