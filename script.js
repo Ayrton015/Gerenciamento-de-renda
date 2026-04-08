@@ -385,4 +385,3 @@ document.addEventListener("DOMContentLoaded", () => {
   if (botaoLimparHistorico) {
     botaoLimparHistorico.addEventListener("click", limparHistorico);
   }
-});
